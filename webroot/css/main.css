@@ -1,0 +1,70 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: calc(100% - 5.2rem);
+    margin-top: 5.2rem;
+}
+
+main {
+    height: 100%;
+    padding-top: 5rem;
+}
+
+main.main-center {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.navigation {
+    background: #f4f5f6;
+    border-bottom: .1rem solid #d1d1d1;
+    display: block;
+    height: 5.2rem;
+    left: 0;
+    max-width: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.navigation .container {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.navigation .navigation-link {
+    display: inline-block;
+    font-size: 1.6rem;
+    height: 100%;
+    line-height: 5.2rem;
+    padding: 0 .5rem;
+    text-decoration: none;
+}
+
+.form-login {
+    padding: 0 25%;
+}
+
+.pagination {
+    list-style-type: none;
+    text-align: center;
+}
+
+.pagination li {
+    display: inline-block;
+    padding: .5rem 1rem;
+}
+
+.pagination li.disabled {
+    opacity: .5;
+}
+.pagination li.disabled a:hover {
+    cursor: default;
+}
