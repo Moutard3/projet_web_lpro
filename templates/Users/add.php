@@ -6,10 +6,7 @@
 ?>
 <div class="row">
     <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading">Menu</h4>
-            <?= $this->Html->link('Liste des utilisateurs', ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
+        <?= $this->element('admin/sidenav') ?>
     </aside>
     <div class="column column-75">
         <?= $this->Form->create($user) ?>

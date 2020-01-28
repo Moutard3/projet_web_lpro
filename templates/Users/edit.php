@@ -6,29 +6,21 @@
 ?>
 <div class="row">
     <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $user->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
+        <?= $this->element('admin/sidenav') ?>
     </aside>
-    <div class="column-responsive column-80">
+    <div class="column column-75">
         <div class="users form content">
             <?= $this->Form->create($user) ?>
             <fieldset>
-                <legend><?= __('Edit User') ?></legend>
+                <legend>Modification d'un utilisateur</legend>
                 <?php
                     echo $this->Form->control('login');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('role');
+                    echo $this->Form->control('password', ['value' => '']);
+                    echo $this->Form->control('role', ['type' => 'select', 'options' => ['user' => 'Etudiant', 'admin' => 'Professeur']]);
                     echo $this->Form->control('email');
                 ?>
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button('Modifier l\'utilisateur') ?>
             <?= $this->Form->end() ?>
         </div>
     </div>

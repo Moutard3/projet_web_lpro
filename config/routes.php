@@ -51,6 +51,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
         'httpOnly' => true,
     ]));
 
+    $builder->connect('/answers/:action', ['controller' => 'Answers']);
+    $builder->connect('/forms/addQuestion', ['controller' => 'Forms', 'action' => 'addQuestion']);
+    $builder->connect('/forms/deleteQuestion', ['controller' => 'Forms', 'action' => 'deleteQuestion']);
+
     /*
      * Apply a middleware to the current route scope.
      * Requires middleware to be registered through `Application::routes()` with `registerMiddleware()`

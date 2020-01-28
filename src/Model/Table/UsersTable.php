@@ -45,6 +45,9 @@ class UsersTable extends Table
         $this->hasMany('StudentResults', [
             'foreignKey' => 'user_id',
         ]);
+        $this->hasMany('Forms', [
+            'foreignKey' => 'created_by',
+        ]);
     }
 
     /**

@@ -1,3 +1,8 @@
+<?php
+/** @var \App\Model\Entity\User $loggedUser */
+/** @var bool $isLogged */
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -17,7 +22,6 @@
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
 </head>
 <body>
     <nav class="navigation">
@@ -26,7 +30,7 @@
 
             <div class="float-right">
                 <?php if ($loggedUser && $loggedUser->isAdmin()): ?>
-                    <?= $this->Html->link('Espace administrateur', ['controller' => 'users', 'action' => 'index'], ['class' => 'navigation-link']) ?>
+                    <?= $this->Html->link('Espace professeur', ['controller' => 'users', 'action' => 'index'], ['class' => 'navigation-link']) ?>
                 <?php endif; ?>
 
                 <?php if (!$isLogged): ?>
@@ -45,5 +49,7 @@
     </main>
     <footer>
     </footer>
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <?= $this->fetch('script') ?>
 </body>
 </html>

@@ -26,6 +26,7 @@ use Cake\Event\EventInterface;
  * will inherit them.
  *
  * @property \Authentication\Controller\Component\AuthenticationComponent Authentication
+ * @property \Cake\Controller\Component\FormProtectionComponent FormProtection
  *
  * @link https://book.cakephp.org/4/en/controllers.html#the-app-controller
  */
@@ -56,9 +57,9 @@ class AppController extends Controller
         $this->loadComponent('Authentication.Authentication');
     }
 
-    public function beforeRender(EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
-        parent::beforeRender($event);
+        parent::beforeFilter($event);
 
         $isLogged = $this->Authentication->getResult()->isValid();
         $this->set('isLogged', $isLogged);
