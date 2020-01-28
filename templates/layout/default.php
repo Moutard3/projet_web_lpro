@@ -9,7 +9,7 @@
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-        LPDQL:
+        LPDQL:&nbsp;
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
@@ -26,7 +26,7 @@
 <body>
     <nav class="navigation">
         <section class="container">
-            <?= $this->Html->link('Accueil', ['controller' => 'pages', 'action' => 'display', 'home'], ['class' => 'navigation-link']) ?>
+            <?= $this->Html->link('Accueil', '/', ['class' => 'navigation-link']) ?>
 
             <div class="float-right">
                 <?php if ($loggedUser && $loggedUser->isAdmin()): ?>
@@ -36,7 +36,7 @@
                 <?php if (!$isLogged): ?>
                     <?= $this->Html->link('Connexion', ['controller' => 'users', 'action' => 'login'], ['class' => 'navigation-link']) ?>
                 <?php else: ?>
-                    <?= $this->Html->link('Déconnexion', ['controller' => 'users', 'action' => 'logout'], ['class' => 'navigation-link']) ?>
+                    <?= $this->Html->link('Déconnexion', '/users/logout', ['class' => 'navigation-link']) ?>
                 <?php endif; ?>
             </div>
         </section>

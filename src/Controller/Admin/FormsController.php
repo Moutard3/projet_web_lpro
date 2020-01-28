@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use Cake\Event\EventInterface;
 
@@ -17,6 +17,8 @@ class FormsController extends AppController
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
+
+        $this->FormProtection->setConfig('unlockedActions', ['addQuestion', 'deleteQuestion']);
     }
 
     /**
@@ -96,5 +98,97 @@ class FormsController extends AppController
         $this->set(compact('form', 'questions'));
 
         return $this->render();
+    }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id Form id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $form = $this->Forms->get($id);
+        if (!$this->Forms->delete($form)) {
+            $this->Flash->error('Erreur');
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    public function addQuestion()
+    {
+        $this->request->allowMethod(['post']);
+
+        $form = $this->Forms->get($this->request->getData('form_id'), [
+            'contain' => ['Questions']
+        ]);
+
+
+        $data = [];
+        $data['questions'] = [];
+        $data['questions']['_ids'] = [];
+
+        foreach ($form->questions as $q) {
+            $data['questions']['_ids'][] = $q->id;
+        }
+
+        $error = 0;
+
+        if (in_array($this->request->getData('question_id'), $data['questions']['_ids'])) {
+            $message = "Cette question est déjà dans ce QCM.";
+            $error = 2;
+        }
+
+        $data['questions']['_ids'][] = $this->request->getData('question_id');
+
+        $form = $this->Forms->patchEntity($form, $data, [
+            'associated' => ['Questions']
+        ]);
+        if ($error == 0 && $this->Forms->save($form)) {
+            $message = "Succès.";
+        } else if ($error == 0) {
+            $message = "Erreur.";
+            $error = 1;
+        }
+
+        $question = $this->Forms->Questions->find()
+            ->where(['id' => $this->request->getData('question_id')])
+            ->first();
+        $this->set(compact('error', 'message', 'question'));
+    }
+
+    public function deleteQuestion()
+    {
+        $this->request->allowMethod(['post']);
+
+        $form = $this->Forms->get($this->request->getData('form_id'), [
+            'contain' => ['Questions']
+        ]);
+
+        $data = [];
+        $data['questions'] = [];
+        $data['questions']['_ids'] = [];
+
+        foreach ($form->questions as $q) {
+            if ($q->id != $this->request->getData('question_id'))
+                $data['questions']['_ids'][] = $q->id;
+        }
+
+        $error = 0;
+
+        $form = $this->Forms->patchEntity($form, $data, [
+            'associated' => ['Questions']
+        ]);
+        if ($error == 0 && $this->Forms->save($form)) {
+            $message = "Succès.";
+        } else if ($error == 0) {
+            $message = "Erreur.";
+            $error = 1;
+        }
+
+        $this->set(compact('error', 'message'));
     }
 }

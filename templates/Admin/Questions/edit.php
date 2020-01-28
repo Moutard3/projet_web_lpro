@@ -113,7 +113,7 @@
         const validAnswer = $(this).val();
 
         $.ajax({
-            url: '<?= $this->Url->build('/answers/changeValid') ?>',
+            url: '<?= $this->Url->build('/admin/answers/changeValid') ?>',
             type: 'POST',
             data: {
                 answer_id: validAnswer,
@@ -143,7 +143,7 @@
 
     function addAnswer(answer) {
         $.ajax({
-            url: '<?= $this->Url->build('/answers/add') ?>',
+            url: '<?= $this->Url->build('/admin/answers/add') ?>',
             type: 'POST',
             data: {
                 answer: answer,
@@ -180,7 +180,7 @@
 
     function updateAnswer(answer_id, answer) {
         $.ajax({
-            url: '<?= $this->Url->build('/answers/edit') ?>',
+            url: '<?= $this->Url->build('/admin/answers/edit') ?>',
             type: 'POST',
             data: {
                 answer: answer,
@@ -201,7 +201,7 @@
 
     function deleteAnswer(answer_id) {
         $.ajax({
-            url: '<?= $this->Url->build('/answers/delete') ?>',
+            url: '<?= $this->Url->build('/admin/answers/delete') ?>',
             type: 'POST',
             data: {
                 answer_id: answer_id,

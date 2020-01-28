@@ -96,7 +96,7 @@
 
     function addQuestion(question_id) {
         $.ajax({
-            url: '<?= $this->Url->build('/forms/addQuestion') ?>',
+            url: '<?= $this->Url->build('/admin/forms/addQuestion') ?>',
             type: 'POST',
             data: {
                 question_id: question_id,
@@ -127,7 +127,7 @@
 
     function deleteQuestion(question_id) {
         $.ajax({
-            url: '<?= $this->Url->build('/forms/deleteQuestion') ?>',
+            url: '<?= $this->Url->build('/admin/forms/deleteQuestion') ?>',
             type: 'POST',
             data: {
                 question_id: question_id,

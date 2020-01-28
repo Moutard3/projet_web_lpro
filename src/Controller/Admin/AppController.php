@@ -14,9 +14,8 @@ declare(strict_types=1);
  * @since     0.2.9
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace App\Controller;
+namespace App\Controller\Admin;
 
-use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
 
 /**
@@ -30,7 +29,7 @@ use Cake\Event\EventInterface;
  *
  * @link https://book.cakephp.org/4/en/controllers.html#the-app-controller
  */
-class AppController extends Controller
+class AppController extends \App\Controller\AppController
 {
     /**
      * Initialization hook method.
@@ -46,34 +45,17 @@ class AppController extends Controller
     {
         parent::initialize();
 
-        $this->loadComponent('RequestHandler');
-        $this->loadComponent('Flash');
 
-        /*
-         * Enable the following component for recommended CakePHP form protection settings.
-         * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
-         */
-        $this->loadComponent('FormProtection');
-        $this->loadComponent('Authentication.Authentication');
     }
 
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
 
-        if ($this->Authentication->getResult()->isValid() &&
-            $this->request->getParam('prefix') !== 'Admin' &&
-            $this->Authentication->getIdentity()->isAdmin()
+        if (!$this->Authentication->getResult()->isValid() ||
+            !$this->Authentication->getIdentity()->isAdmin()
         ) {
-            return $this->redirect(['prefix' => 'Admin', 'controller' => 'Users', 'action' => 'index']);
-        }
-
-        $isLogged = $this->Authentication->getResult()->isValid();
-        $this->set('isLogged', $isLogged);
-        if ($isLogged) {
-            $this->set('loggedUser', $this->Authentication->getIdentity());
-        } else {
-            $this->set('loggedUser', null);
+            return $this->redirect('/');
         }
     }
 }

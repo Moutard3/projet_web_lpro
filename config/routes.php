@@ -51,10 +51,6 @@ $routes->scope('/', function (RouteBuilder $builder) {
         'httpOnly' => true,
     ]));
 
-    $builder->connect('/answers/:action', ['controller' => 'Answers']);
-    $builder->connect('/forms/addQuestion', ['controller' => 'Forms', 'action' => 'addQuestion']);
-    $builder->connect('/forms/deleteQuestion', ['controller' => 'Forms', 'action' => 'deleteQuestion']);
-
     /*
      * Apply a middleware to the current route scope.
      * Requires middleware to be registered through `Application::routes()` with `registerMiddleware()`
@@ -66,8 +62,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, templates/Pages/home.php)...
      */
-    $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-    $builder->connect('/home', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $builder->connect('/', ['controller' => 'Forms', 'action' => 'index']);
 
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
@@ -87,6 +82,12 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * You can remove these routes once you've connected the
      * routes you want in your application.
      */
+    $builder->fallbacks();
+});
+
+$routes->prefix('admin', function (RouteBuilder $builder) {
+    $builder->connect('/', ['controller' => 'Users', 'action' => 'index']);
+
     $builder->fallbacks();
 });
 
