@@ -51,6 +51,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
         'httpOnly' => true,
     ]));
 
+    $builder->connect('forms/ajaxAnswer', ['controller' => 'Forms', 'action' => 'ajaxAnswer']);
+
     /*
      * Apply a middleware to the current route scope.
      * Requires middleware to be registered through `Application::routes()` with `registerMiddleware()`

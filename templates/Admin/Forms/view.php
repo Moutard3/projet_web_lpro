@@ -31,19 +31,14 @@
             </table>
             <div class="related">
                 <h4>Questions du QCM</h4>
-                <?php if (!empty($form->form_questions)) : ?>
+                <?php if (!empty($form->questions)) : ?>
                 <table>
                     <tr>
                         <th>Question</th>
-                        <th>Actions</th>
                     </tr>
-                    <?php foreach ($form->form_questions as $formQuestions) : ?>
+                    <?php foreach ($form->questions as $formQuestions) : ?>
                     <tr>
-                        <td><?= h($formQuestions->form_id) ?></td>
-                        <td><?= h($formQuestions->question_id) ?></td>
-                        <td class="actions">
-                            <?= $this->Form->postLink('Retirer', ['controller' => 'FormQuestions', 'action' => 'delete', $formQuestions->form_id], ['confirm' => 'Etes-vous sûr de vouloir retirer cette question du QCM ?']) ?>
-                        </td>
+                        <td><?= h($formQuestions->display_text) ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </table>

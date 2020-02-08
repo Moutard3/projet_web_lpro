@@ -45,7 +45,7 @@ class FormsController extends AppController
     public function view($id = null)
     {
         $form = $this->Forms->get($id, [
-            'contain' => ['FormsQuestions', 'StudentAnswers', 'StudentResults', 'Users'],
+            'contain' => ['Questions', 'StudentAnswers', 'StudentResults', 'Users'],
         ]);
 
         $this->set('form', $form);
