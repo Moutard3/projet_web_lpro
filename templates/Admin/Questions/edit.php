@@ -47,7 +47,7 @@
                             </div>
                             <div
                                 class="column column-20 text-center column-center">
-                                <input type="radio" name="valid"
+                                <input type="checkbox" name="valid-a<?= $response->id ?>"
                                        class="m-0 v-align-middle"
                                        value="<?= $response->id ?>" <?= $response->valid ? 'checked' : '' ?>>
                             </div>
@@ -109,24 +109,18 @@
         updateAnswer(answer_id, answer)
     });
 
-    $('input[name=valid]').on('change', function () {
-        const validAnswer = $(this).val();
+    $('input[name*=valid-a]').on('change', function () {
+        const answer = $(this).val();
 
         $.ajax({
-            url: '<?= $this->Url->build('/admin/answers/changeValid') ?>',
+            url: '<?= $this->Url->build('/admin/answers/toggleValid') ?>',
             type: 'POST',
             data: {
-                answer_id: validAnswer,
-                question_id: <?= $question->id ?>,
+                answer_id: answer,
             },
             dataType: 'json',
             success: function (data) {
-                if (data.error === 0) {
-                    $inputNewAnswer.val('');
-                    $divAnswersList.append(
-                        $inputNewAnswer.clone().attr('id',
-                            'answer-' + data.id));
-                } else {
+                if (data.error !== 0) {
                     alert(data.message);
                 }
             }

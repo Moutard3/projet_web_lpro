@@ -33,6 +33,7 @@ class FormsController extends AppController
             'contain' => [
                 'Users',
                 'StudentAnswers',
+                'StudentResults',
                 'Questions'
             ]
         ]);

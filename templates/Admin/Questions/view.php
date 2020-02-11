@@ -24,7 +24,7 @@
             <table>
                 <tr>
                     <th>Réponse</th>
-                    <th></th>
+                    <th>Valide</th>
                 </tr>
                 <?php foreach ($question->answers as $answers) : ?>
                     <tr>
@@ -35,24 +35,16 @@
             </table>
         <?php endif; ?>
         <div class="related">
-            <h4><?= __('Related Form Questions') ?></h4>
-            <?php if (!empty($question->form_questions)) : ?>
+            <h4>QCM avec cette question</h4>
+            <?php if (!empty($question->forms)) : ?>
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Form Id') ?></th>
-                            <th><?= __('Question Id') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
+                            <th>Titre</th>
                         </tr>
-                        <?php foreach ($question->form_questions as $formQuestions) : ?>
+                        <?php foreach ($question->forms as $form) : ?>
                             <tr>
-                                <td><?= h($formQuestions->form_id) ?></td>
-                                <td><?= h($formQuestions->question_id) ?></td>
-                                <td class="actions">
-                                    <?= $this->Html->link(__('View'), ['controller' => 'FormQuestions', 'action' => 'view', $formQuestions->form_id]) ?>
-                                    <?= $this->Html->link(__('Edit'), ['controller' => 'FormQuestions', 'action' => 'edit', $formQuestions->form_id]) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'FormQuestions', 'action' => 'delete', $formQuestions->form_id], ['confirm' => __('Are you sure you want to delete # {0}?', $formQuestions->form_id)]) ?>
-                                </td>
+                                <td><?= h($form->display_name) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
@@ -60,30 +52,20 @@
             <?php endif; ?>
         </div>
         <div class="related">
-            <h4><?= __('Related Student Answers') ?></h4>
+            <h4>Réponses des étudiants</h4>
             <?php if (!empty($question->student_answers)) : ?>
                 <div class="table-responsive">
                     <table>
                         <tr>
-                            <th><?= __('Id') ?></th>
-                            <th><?= __('User Id') ?></th>
-                            <th><?= __('Form Id') ?></th>
-                            <th><?= __('Question Id') ?></th>
-                            <th><?= __('Answer Id') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
+                            <th>Etudiant</th>
+                            <th>QCM</th>
+                            <th>Réponse</th>
                         </tr>
                         <?php foreach ($question->student_answers as $studentAnswers) : ?>
                             <tr>
-                                <td><?= h($studentAnswers->id) ?></td>
-                                <td><?= h($studentAnswers->user_id) ?></td>
-                                <td><?= h($studentAnswers->form_id) ?></td>
-                                <td><?= h($studentAnswers->question_id) ?></td>
-                                <td><?= h($studentAnswers->answer_id) ?></td>
-                                <td class="actions">
-                                    <?= $this->Html->link(__('View'), ['controller' => 'StudentAnswers', 'action' => 'view', $studentAnswers->id]) ?>
-                                    <?= $this->Html->link(__('Edit'), ['controller' => 'StudentAnswers', 'action' => 'edit', $studentAnswers->id]) ?>
-                                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'StudentAnswers', 'action' => 'delete', $studentAnswers->id], ['confirm' => __('Are you sure you want to delete # {0}?', $studentAnswers->id)]) ?>
-                                </td>
+                                <td><?= h($studentAnswers->user->login) ?></td>
+                                <td><?= h($studentAnswers->form->display_name) ?></td>
+                                <td><?= h($studentAnswers->answer->display_text) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

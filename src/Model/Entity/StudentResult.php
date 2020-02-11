@@ -8,9 +8,9 @@ use Cake\ORM\Entity;
 /**
  * StudentResult Entity
  *
- * @property int $id
  * @property int $user_id
  * @property int $form_id
+ * @property float $result
  * @property bool $published
  *
  * @property \App\Model\Entity\User $user
@@ -30,6 +30,7 @@ class StudentResult extends Entity
     protected $_accessible = [
         'user_id' => true,
         'form_id' => true,
+        'result' => true,
         'published' => true,
         'user' => true,
         'form' => true,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use Cake\Event\EventInterface;
+use Cake\ORM\Query;
 
 /**
  * Forms Controller
@@ -190,5 +191,57 @@ class FormsController extends AppController
         }
 
         $this->set(compact('error', 'message'));
+    }
+
+    public function computeResults($id)
+    {
+        $this->request->allowMethod('POST');
+
+        $this->loadModel('StudentAnswers');
+        $form = $this->StudentAnswers->find()
+            ->select(['StudentAnswers.user_id', 'Answers.valid'])
+            ->contain('Answers')
+            ->where(['form_id' => $id])
+            ->toArray();
+
+        $nbQuestions = $this->Forms->Questions->find()
+            ->matching('Forms', function (Query $builder) use ($id) {
+                return $builder->where(['Forms.id' => $id]);
+            })
+            ->count();
+
+        $results = [];
+        foreach ($form as $v) {
+            $results[$v['user_id']][] = $v['answer']['valid'];
+        }
+
+        $this->loadModel('StudentResults');
+        foreach ($results as $user_id => $answers) {
+            $results[$user_id] = round(count(array_filter($results[$user_id])) * 20 / $nbQuestions, 2, PHP_ROUND_HALF_UP);
+
+            $entity = $this->StudentResults->newEntity([
+                'user_id' => $user_id,
+                'form_id' => $id,
+                'result'  => $results[$user_id],
+                'published' => 0,
+            ]);
+            $this->StudentResults->save($entity);
+        }
+
+        return $this->redirect($this->referer());
+    }
+
+    public function publishResults($id)
+    {
+        $this->request->allowMethod('POST');
+
+        $this->loadModel('StudentResults');
+        $this->StudentResults->updateAll([
+            'published' => 1
+        ], [
+            'form_id' => $id
+        ]);
+
+        return $this->redirect($this->referer());
     }
 }

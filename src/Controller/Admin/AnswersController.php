@@ -18,7 +18,7 @@ class AnswersController extends AppController
     {
         parent::beforeFilter($event);
 
-        $this->FormProtection->setConfig('unlockedActions', ['add', 'edit', 'delete', 'changeValid']);
+        $this->FormProtection->setConfig('unlockedActions', ['add', 'edit', 'delete', 'toggleValid']);
     }
 
     /**
@@ -118,32 +118,32 @@ class AnswersController extends AppController
     }
 
     /**
-     * Edit method
+     * Toggle valid answer method
      *
      * @return \Cake\Http\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function changeValid()
+    public function toggleValid()
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
             $answer_id = $this->request->getData('answer_id');
-            $question_id = $this->request->getData('question_id');
             $data = [];
-            $data['valid'] = 1;
 
             $answer = $this->Answers->get($answer_id, [
                 'contain' => [],
             ]);
+            $data['valid'] = !$answer->valid;
             $answer = $this->Answers->patchEntity($answer, $data);
 
-            $oldAnswer = $this->Answers->find()
-                ->where(['valid' => 1])
-                ->where(['question_id' => $question_id])
-                ->first();
-            if (!empty($oldAnswer)) {
-                $oldAnswer->set('valid', 0);
-                $this->Answers->save($oldAnswer);
-            }
+            // Pour une seule bonne réponse possible
+//            $oldAnswer = $this->Answers->find()
+//                ->where(['valid' => 1])
+//                ->where(['question_id' => $question_id])
+//                ->first();
+//            if (!empty($oldAnswer)) {
+//                $oldAnswer->set('valid', 0);
+//                $this->Answers->save($oldAnswer);
+//            }
 
             if ($this->Answers->save($answer)) {
                 $message = 'Succès';

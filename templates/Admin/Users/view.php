@@ -38,9 +38,9 @@
                         </tr>
                         <?php foreach ($user->student_answers as $studentAnswers) : ?>
                         <tr>
-                            <td><?= h($studentAnswers->form->title) ?></td>
-                            <td><?= h($studentAnswers->question->display_name) ?></td>
-                            <td><?= h($studentAnswers->answer->display_name) ?></td>
+                            <td><?= h($studentAnswers->form->display_name) ?></td>
+                            <td><?= h($studentAnswers->question->display_text) ?></td>
+                            <td><?= h($studentAnswers->answer->display_text) ?></td>
                             <td class="actions">
                                 <?= $this->Form->postLink('Supprimer', ['controller' => 'StudentAnswers', 'action' => 'delete', $studentAnswers->id], ['confirm' => __('Are you sure you want to delete # {0}?', $studentAnswers->id)]) ?>
                             </td>
@@ -57,14 +57,14 @@
                     <table>
                         <tr>
                             <th>QCM</th>
+                            <th>Résultat</th>
                             <th>Publié</th>
                             <th>Actions</th>
                         </tr>
                         <?php foreach ($user->student_results as $studentResults) : ?>
                         <tr>
-                            <td><?= h($studentResults->id) ?></td>
-                            <td><?= h($studentResults->user_id) ?></td>
                             <td><?= h($studentResults->form_id) ?></td>
+                            <td><?= h($studentResults->result) ?>/20</td>
                             <td><?= h($studentResults->published) ?></td>
                             <td class="actions">
                                 <?= $this->Form->postLink('Supprimer', ['controller' => 'StudentResults', 'action' => 'delete', $studentResults->id], ['confirm' => __('Are you sure you want to delete # {0}?', $studentResults->id)]) ?>

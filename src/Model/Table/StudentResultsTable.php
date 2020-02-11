@@ -36,8 +36,8 @@ class StudentResultsTable extends Table
         parent::initialize($config);
 
         $this->setTable('student_results');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey('id');
+        $this->setDisplayField('user_id');
+        $this->setPrimaryKey(['user_id', 'form_id']);
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
@@ -58,8 +58,9 @@ class StudentResultsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->nonNegativeInteger('id')
-            ->allowEmptyString('id', null, 'create');
+            ->numeric('result')
+            ->requirePresence('result', 'create')
+            ->notEmptyString('result');
 
         $validator
             ->boolean('published')
