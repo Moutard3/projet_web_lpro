@@ -22,7 +22,7 @@ class ThemeSeed extends AbstractSeed
     {
         $faker = Faker\Factory::create();
         $data = [];
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $data[] = [
                 'display_name' => $faker->sentence(2),
             ];
