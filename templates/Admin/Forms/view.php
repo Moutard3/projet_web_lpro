@@ -43,6 +43,22 @@
                     <?php endforeach; ?>
                 </table>
                 <?php endif; ?>
+
+                <h4>Etudiants ayant réalisé le QCM</h4>
+                <?php if (!empty($users_done)) : ?>
+                    <table>
+                        <tr>
+                            <th>Etudiant</th>
+                            <th>Note</th>
+                        </tr>
+                        <?php foreach ($users_done as $student) : ?>
+                            <tr>
+                                <td><?= h($student->login) ?></td>
+                                <td><?= !empty($student->student_results) ? $student->student_results[0]->result : '' ?>/20</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                <?php endif; ?>
             </div>
         </div>
     </div>

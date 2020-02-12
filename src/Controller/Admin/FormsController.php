@@ -49,6 +49,16 @@ class FormsController extends AppController
             'contain' => ['Questions', 'StudentAnswers', 'StudentResults', 'Users'],
         ]);
 
+        $users_done = $this->Forms->Users->find()
+            ->contain(['StudentResults'])
+            ->matching('StudentAnswers', function (Query $builder) use ($id) {
+                return $builder->where(['StudentAnswers.form_id' => $id]);
+            })
+            ->all();
+
+//        debug($users_done);
+
+        $this->set('users_done', $users_done);
         $this->set('form', $form);
 
         return $this->render();
@@ -236,6 +246,7 @@ class FormsController extends AppController
         $this->request->allowMethod('POST');
 
         $this->loadModel('StudentResults');
+        $this->computeResults($id);
         $this->StudentResults->updateAll([
             'published' => 1
         ], [
