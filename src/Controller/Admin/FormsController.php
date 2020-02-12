@@ -19,7 +19,7 @@ class FormsController extends AppController
     {
         parent::beforeFilter($event);
 
-        $this->FormProtection->setConfig('unlockedActions', ['addQuestion', 'deleteQuestion']);
+        $this->FormProtection->setConfig('unlockedActions', ['addQuestion', 'deleteQuestion', 'getQuestionsByTheme']);
     }
 
     /**
@@ -106,7 +106,8 @@ class FormsController extends AppController
             $this->Flash->error('Erreur');
         }
         $questions = $this->Forms->Questions->find('list', ['order' => 'theme_id'])->toArray();
-        $this->set(compact('form', 'questions'));
+        $themes = $this->Forms->Questions->Themes->find('list', ['order' => 'display_name'])->toArray();
+        $this->set(compact('form', 'questions', 'themes'));
 
         return $this->render();
     }
@@ -254,5 +255,23 @@ class FormsController extends AppController
         ]);
 
         return $this->redirect($this->referer());
+    }
+
+    public function getQuestionsByTheme()
+    {
+        $this->request->allowMethod(['post']);
+        $theme_id = $this->request->getData('theme_id');
+
+        $message = 'Vous devez fournir le theme_id';
+        $error = 1;
+        if (isset($theme_id)) {
+            $message = 'Succès.';
+            $error = 0;
+        }
+
+        $questions = $this->Forms->Questions->find('list')
+            ->where(['theme_id' => $theme_id]);
+
+        $this->set(compact('error', 'message', 'questions'));
     }
 }

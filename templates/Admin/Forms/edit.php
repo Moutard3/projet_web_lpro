@@ -3,6 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Form $form
  * @var \App\Model\Entity\Question[] $questions
+ * @var \App\Model\Entity\Theme[] $themes
  */
 ?>
 <div class="row">
@@ -54,7 +55,13 @@
                 <legend>Ajouter une question au QCM</legend>
 
                 <div class="row">
-                    <select class="column column-75" id="selectQuestion">
+                    <select class="column column-25" id="selectThemes">
+                        <option value="">Tous</option>
+                        <?php foreach ($themes as $k => $v): ?>
+                            <option value="<?= $k ?>"><?= $v ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <select class="column column-50" id="selectQuestion">
                         <?php foreach ($questions as $k => $v): ?>
                             <option value="<?= $k ?>"><?= $v ?></option>
                         <?php endforeach; ?>
@@ -98,6 +105,27 @@
         deleteQuestion(question_id);
 
         return false;
+    });
+
+    $('#selectThemes').on('change', function() {
+        $.ajax({
+            url: '<?= $this->Url->build('/admin/forms/getQuestionsByTheme') ?>',
+            type: 'POST',
+            data: {
+                theme_id: $('#selectThemes').val(),
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                if (data.error === 0) {
+                    $('#selectQuestion').empty();
+                    $.each(data.questions, function (i, v) {
+                        $('#selectQuestion').append('<option value='+i+'>'+v+'</option>');
+                    });
+                } else {
+                    alert(data.message);
+                }
+            }
+        });
     });
 
     function addQuestion(question_id) {
