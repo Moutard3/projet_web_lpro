@@ -61,7 +61,8 @@ class AppController extends Controller
     {
         parent::beforeFilter($event);
 
-        if ($this->Authentication->getResult()->isValid() &&
+        if ($this->request->getParam('action') !== 'login' &&
+            $this->Authentication->getResult()->isValid() &&
             $this->request->getParam('prefix') !== 'Admin' &&
             $this->Authentication->getIdentity()->isAdmin()
         ) {

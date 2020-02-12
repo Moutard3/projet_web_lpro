@@ -52,7 +52,7 @@ class AppController extends \App\Controller\AppController
     {
         parent::beforeFilter($event);
 
-        if (!$this->Authentication->getResult()->isValid() ||
+        if ($this->Authentication->getResult()->isValid() &&
             !$this->Authentication->getIdentity()->isAdmin()
         ) {
             return $this->redirect('/');
