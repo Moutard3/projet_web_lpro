@@ -29,14 +29,22 @@ class FormsController extends AppController
      */
     public function index()
     {
-        $forms = $this->paginate($this->Forms, [
-            'contain' => [
+        $query = $this->Forms->find();
+        $query->contain([
                 'Users',
                 'StudentAnswers',
                 'StudentResults',
                 'Questions'
-            ]
-        ]);
+        ])
+            ->where([
+                'or' => [
+                    ['closed_on IS NULL'],
+                    ['closed_on >=' => $query->func()->now()],
+                ],
+                'active' => 1,
+            ]);
+
+        $forms = $this->paginate($query);
 
         $this->set(compact('forms'));
 
@@ -55,6 +63,10 @@ class FormsController extends AppController
         $form = $this->Forms->get($id, [
             'contain' => ['Questions' => ['Answers'], 'StudentAnswers'],
         ]);
+
+        if ($form->closed_on && $form->closed_on->isPast()) {
+            return $this->redirect('/forms/index');
+        }
 
         $this->set('form', $form);
 
@@ -158,6 +170,15 @@ class FormsController extends AppController
         $fId = $this->request->getData('form');
         $qId = $this->request->getData('question');
         $aId = $this->request->getData('answer');
+
+        $form = $this->Forms->get($fId, [
+            'contain' => [],
+        ]);
+
+        if ($form->closed_on && $form->closed_on->isPast()) {
+            $this->set('success', 0);
+            return $this->render();
+        }
 
         $this->loadModel('StudentAnswers');
         $entity = $this->Forms->StudentAnswers->newEntity([

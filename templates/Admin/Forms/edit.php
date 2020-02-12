@@ -16,11 +16,11 @@
             <?= $this->Form->control('display_name', ['label' => 'Titre']); ?>
             <div class="float-left">
                 <div>
-                    <input type="checkbox" id="hasClosedDate">
+                    <input type="checkbox" id="hasClosedDate" <?= $form->closed_on ? 'checked' : '' ?>>
                     <label for="hasClosedDate" class="label-inline">Cochez pour
                         limiter le QCM dans le temps.</label>
                 </div>
-                <div class="hidden" id="closedOnDiv">
+                <div class="<?= $form->closed_on ? '' : 'hidden' ?>" id="closedOnDiv">
                     <?= $this->Form->control('closed_on', ['label' => 'Date de fin', 'type' => 'date']); ?>
                 </div>
             </div>
@@ -32,33 +32,39 @@
         <?= $this->Form->end() ?>
 
         <form>
-            <div id="questionsList">
-                <?php foreach($form->questions as $q): ?>
-                <div id="question-<?= $q->id ?>">
-                    <div class="row">
-                        <div class="column column-75">
-                            <input type="text" value="<?= $q->display_text ?>" readonly>
+            <fieldset>
+                <div id="questionsList">
+                    <?php foreach($form->questions as $q): ?>
+                    <div id="question-<?= $q->id ?>">
+                        <div class="row">
+                            <div class="column column-75">
+                                <input type="text" value="<?= $q->display_text ?>" readonly>
+                            </div>
+                            <button class="button-outline column deleteQuestion" data-questionid="<?= $q->id ?>">
+                                Retirer la question
+                            </button>
                         </div>
-                        <button class="button-outline column deleteQuestion" data-questionid="<?= $q->id ?>">
-                            Retirer la question
-                        </button>
+                        <hr>
                     </div>
-                    <hr>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="row">
-                <select class="column column-75" id="selectQuestion">
-                    <?php foreach ($questions as $k => $v): ?>
-                        <option value="<?= $k ?>"><?= $v ?></option>
                     <?php endforeach; ?>
-                </select>
+                </div>
+            </fieldset>
 
-                <button class="button column" id="addQuestion">
-                    Ajouter la question
-                </button>
-            </div>
+            <fieldset>
+                <legend>Ajouter une question au QCM</legend>
+
+                <div class="row">
+                    <select class="column column-75" id="selectQuestion">
+                        <?php foreach ($questions as $k => $v): ?>
+                            <option value="<?= $k ?>"><?= $v ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button class="button column" id="addQuestion">
+                        Ajouter la question
+                    </button>
+                </div>
+            </fieldset>
         </form>
     </div>
 </div>

@@ -86,7 +86,7 @@ class FormsTable extends Table
             ->notEmptyString('active');
 
         $validator
-            ->dateTime('closed_on')
+            ->date('closed_on')
             ->requirePresence('closed_on', 'create')
             ->allowEmptyDateTime('closed_on');
 
