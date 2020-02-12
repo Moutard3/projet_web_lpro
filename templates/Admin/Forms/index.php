@@ -34,9 +34,7 @@
                         <?= $this->Html->link('Modifier', ['action' => 'edit', $form->id]) ?> |
                         <?= $this->Form->postLink('Supprimer', ['action' => 'delete', $form->id], ['confirm' => 'Etes-vous sûr de vouloir supprimer ce QCM ? ('.$form->display_name.')']) ?><br>
                         <?= $this->Form->postLink('Calculer les résultats', ['action' => 'computeResults', $form->id]) ?><br>
-                        <?php if (!empty($form->student_results[0]->published)) : ?>
                         <?= $this->Form->postLink('Publier les résultats', ['action' => 'publishResults', $form->id], ['confirm' => 'Etes-vous sûr de vouloir publier les résultats ? ('.$form->display_name.')']) ?>
-                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
