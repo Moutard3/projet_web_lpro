@@ -31,10 +31,8 @@ class FormsController extends AppController
     {
         $query = $this->Forms->find();
         $query->contain([
-                'Users',
-                'StudentAnswers',
-                'StudentResults',
-                'Questions'
+            'Users',
+            'Questions'
         ])
             ->where([
                 'or' => [
