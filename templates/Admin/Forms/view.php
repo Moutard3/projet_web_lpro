@@ -35,10 +35,30 @@
                 <table>
                     <tr>
                         <th>Question</th>
+                        <th>Réponses</th>
                     </tr>
                     <?php foreach ($form->questions as $formQuestions) : ?>
                     <tr>
                         <td><?= h($formQuestions->display_text) ?></td>
+                        <td>
+                            <ol>
+                            <?php foreach ($formQuestions->answers as $answer) :
+                                echo '<li>';
+
+                                if ($answer->valid) {
+                                    echo '<strong>';
+                                }
+
+                                echo $answer->display_text;
+
+                                if ($answer->valid) {
+                                    echo '</strong>';
+                                }
+
+                                echo '</li>';
+                            endforeach; ?>
+                            </ol>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </table>
