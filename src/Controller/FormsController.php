@@ -33,14 +33,19 @@ class FormsController extends AppController
         $query = $this->Forms->find();
         $query->contain([
             'Users',
-            'Questions'
+            'Questions',
+            'StudentAnswers' => function (Query $query) {
+                return $query->where([
+                    'StudentAnswers.user_id' => $this->Authentication->getIdentity()->getIdentifier()
+                ]);
+            }
         ])
             ->where([
                 'or' => [
                     ['closed_on IS NULL'],
                     ['closed_on >=' => $query->func()->now()],
                 ],
-                'active' => 1,
+                'active' => 1
             ]);
 
         $forms = $this->paginate($query);
@@ -69,17 +74,11 @@ class FormsController extends AppController
 
         $this->set('form', $form);
 
-        $lastAnswered = $this->Forms->StudentAnswers->find()
+        $answered = $this->Forms->StudentAnswers->find('list', ['keyField' => '{n}', 'valueField' => 'question_id'])
             ->select('question_id')
             ->where(['form_id' => $id])
             ->where(['user_id' => $this->Authentication->getIdentityData('id')])
-            ->last();
-
-        if (!isset($lastAnswered->question_id)) {
-            $lastAnswered = -1;
-        } else {
-            $lastAnswered = $lastAnswered->question_id;
-        }
+            ->toArray();
 
         $questions = $this->Forms->Questions->find('list')
             ->select(['id'])
@@ -91,7 +90,7 @@ class FormsController extends AppController
 
         $nextQuestion = -1;
         foreach ($questions as $k => $v) {
-            if ($k > $lastAnswered) {
+            if (!in_array($k, $answered)) {
                 $nextQuestion = $k;
                 break;
             }

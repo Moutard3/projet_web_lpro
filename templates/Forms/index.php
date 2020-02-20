@@ -24,9 +24,11 @@
                 <tr>
                     <td><?= h($form->display_name) ?></td>
                     <td><?= h($form->closed_on) ?></td>
+                    <?php if (count($form->questions) > count($form->student_answers)) : ?>
                     <td class="actions">
                         <?= $this->Html->link('Effectuer ce QCM', ['action' => 'take', $form->id]) ?>
                     </td>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
             </tbody>
