@@ -39,6 +39,19 @@ textarea {
     border-color: orange;
 }
 
+.text-green {
+    color: limegreen;
+}
+
+.text-orange {
+    color: orange;
+}
+
+.feedback {
+    padding: 0 0 1.5rem 2rem;
+    font-style: italic;
+}
+
 .h-100 {
     height: 100%;
 }

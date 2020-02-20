@@ -24,7 +24,12 @@
                     <div class="row">
                         <div class="column">
                             <input type="radio" name="answer" value="<?= $answer->id ?>">
-                            <label class="label-inline"><?= $answer->display_text ?></label>
+                            <label class="label-inline" id="label-a<?= $answer->id ?>"><?= $answer->display_text ?></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <div id="feedback-a<?= $answer->id ?>" class="feedback"></div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -40,15 +45,41 @@
 
 <?php $this->start('script') ?>
 <script>
-    $('#sendAnswer').on('click', function(e) {
+    $btnSendAnswer = $('#sendAnswer');
+    $btnSendAnswer.on('click', function(e) {
         e.preventDefault();
+
+        $('input').prop('readonly', true);
 
         $.ajax({
             url: '<?= $this->Url->build('/forms/ajaxAnswer') ?>/',
             type: 'POST',
             data: $('#formAnswer').serialize(),
+            dataType: 'json',
             success: function (data) {
-                window.location = '';
+                if (data.success) {
+                    $.each(data.answers, function (i, answer) {
+                        $('#feedback-a'+answer.id).html(answer.feedback);
+                        if (answer.valid) {
+                            $('#label-a'+answer.id).addClass('text-green');
+                        } else {
+                            $('#label-a'+answer.id).addClass('text-orange');
+                        }
+                    });
+
+                    $btnSendAnswer.html('Suivant');
+                } else {
+                    $btnSendAnswer.html('Recharger');
+                }
+
+                $btnSendAnswer.off('click');
+                $btnSendAnswer.on('click', function(e) {
+                    e.preventDefault();
+
+                    location.href = '';
+
+                    return false;
+                });
             },
         });
 

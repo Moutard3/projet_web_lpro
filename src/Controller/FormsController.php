@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
+use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
 /**
@@ -195,8 +196,15 @@ class FormsController extends AppController
             ->count();
 
         if (!$alreadyAnswered) {
+            $answers = $this->Forms->StudentAnswers->Answers->find()
+                ->select(['Answers.id', 'feedback', 'valid'])
+                ->matching('Questions', function(Query $query) use ($qId) {
+                    return $query->where(['Questions.id' => $qId]);
+                })
+                ->all();
             $this->Forms->StudentAnswers->save($entity);
             $this->set('success', 1);
+            $this->set('answers', $answers);
         } else {
             $this->set('success', 0);
         }
