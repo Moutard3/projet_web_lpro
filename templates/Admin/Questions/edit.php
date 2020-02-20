@@ -28,33 +28,43 @@
                 <legend>Réponses</legend>
 
                 <div id="answersList">
-                    <div class="row">
-                        <div
-                            class="column column-20 column-offset-50 text-center">
-                            <strong>Bonne réponse</strong>
-                        </div>
-                    </div>
                     <?php
                     foreach ($question->answers as $response):
                         ?>
-                        <div class="row">
-                            <div class="column column-50">
-                            <textarea rows="2" id="answer-<?= $response->id ?>"
-                                      name="answer-<?= $response->id ?>"
-                                      class="m-0 answer"><?=
-                                h($response->display_text)
-                                ?></textarea>
+                        <div class="row" data-answer-id="<?= $response->id ?>">
+                            <div class="column">
+                                <label
+                                    for="answer-<?= $response->id ?>">Réponse</label>
+                                <textarea rows="2"
+                                          id="answer-<?= $response->id ?>"
+                                          name="answer-<?= $response->id ?>"
+                                          class="m-0 answer"><?=
+                                    h($response->display_text)
+                                    ?></textarea>
+                            </div>
+                            <div class="column">
+                                <label for="feedback-<?= $response->id ?>">Feedback</label>
+                                <textarea rows="2"
+                                          id="feedback-<?= $response->id ?>"
+                                          name="feedback-<?= $response->id ?>"
+                                          class="m-0 feedback"><?=
+                                    h($response->feedback)
+                                    ?></textarea>
                             </div>
                             <div
-                                class="column column-20 text-center column-center">
-                                <input type="checkbox" name="valid-a<?= $response->id ?>"
+                                class="column column-20 text-center">
+                                <label for="valid-a<?= $response->id ?>">Bonne
+                                    réponse</label>
+                                <input type="checkbox"
+                                       name="valid-a<?= $response->id ?>"
                                        class="m-0 v-align-middle"
+                                       id="valid-a<?= $response->id ?>"
                                        value="<?= $response->id ?>" <?= $response->valid ? 'checked' : '' ?>>
                             </div>
                             <div
-                                class="column column-10 text-center column-center">
-                                <a href="#" class="deleteAnswer"
-                                   data-answerid="<?= $response->id ?>">Supprimer</a>
+                                class="column column-10 text-center">
+                                <label>&nbsp;</label>
+                                <a href="#" class="deleteAnswer">Supprimer</a>
                             </div>
                         </div>
                         <hr>
@@ -63,15 +73,21 @@
                     ?>
                 </div>
 
-                <label for="newAnswer">Nouvelle réponse</label>
                 <div class="row">
                     <div class="column">
+                        <label for="newAnswer">Nouvelle réponse</label>
                         <textarea rows="2" id="newAnswer"
                                   class="m-0 answer"></textarea>
                     </div>
                     <div class="column">
-                        <button id="addAnswer" class="button-outline">Ajouter
-                            cette réponse
+                        <label for="newFeedback">Feedback</label>
+                        <textarea rows="2" id="newFeedback"
+                                  class="m-0 feedback"></textarea>
+                    </div>
+                    <div class="column">
+                        <label>&nbsp;</label>
+                        <button id="addAnswer" class="button-outline">
+                            Ajouter cette réponse
                         </button>
                     </div>
                 </div>
@@ -83,30 +99,41 @@
 <?php $this->start('script'); ?>
 <script>
     const $inputNewAnswer = $('#newAnswer');
+    const $inputNewFeedback = $('#newFeedback');
     const $divAnswersList = $('#answersList');
+    const $inputUpdate = $('textarea.answer:not(#newAnswer),' +
+        'textarea.feedback:not(#newFeedback)');
 
     $('#addAnswer').on('click', function (e) {
         e.preventDefault();
 
         const valNewAnswer = $inputNewAnswer.val();
+        const valNewFeedback = $inputNewFeedback.val();
         if (valNewAnswer !== "") {
             $inputNewAnswer.prop('disabled', true);
-            addAnswer(valNewAnswer);
+            $inputNewFeedback.prop('disabled', true);
+            addAnswer(valNewAnswer, valNewFeedback);
             $inputNewAnswer.prop('disabled', false);
+            $inputNewFeedback.prop('disabled', false);
         }
 
         return false;
     });
 
-    $('textarea.answer:not(#newAnswer)').on('input', function () {
-        $(this).removeClass('border-green').addClass('border-orange');
+    $inputUpdate.on('input', function () {
+        const answer_id = $(this).parents('.row').first().data('answer_id');
+
+        $('#answer-' + answer_id + ',#feedback-' + answer_id)
+        .removeClass('border-green')
+        .addClass('border-orange');
     });
 
-    $('textarea.answer:not(#newAnswer)').on('change', function () {
-        const answer_id = $(this).attr('id').split('-')[1];
-        const answer = $(this).val();
+    $inputUpdate.on('change', function () {
+        const answer_id = $(this).parents('.row').first().data('answer-id');
+        const answer = $('#answer-' + answer_id).val();
+        const feedback = $('#feedback-' + answer_id).val();
 
-        updateAnswer(answer_id, answer)
+        updateAnswer(answer_id, answer, feedback);
     });
 
     $('input[name*=valid-a]').on('change', function () {
@@ -129,18 +156,19 @@
 
     $(".deleteAnswer").on('click', function (e) {
         e.preventDefault();
-        const answer_id = $(this).data('answerid');
+        const answer_id = $(this).parents('.row').first().data('answer-id');
 
         deleteAnswer(answer_id);
         return false;
     });
 
-    function addAnswer(answer) {
+    function addAnswer(answer, feedback) {
         $.ajax({
             url: '<?= $this->Url->build('/admin/answers/add') ?>',
             type: 'POST',
             data: {
                 answer: answer,
+                feedback: feedback,
                 question_id: <?= $question->id ?>,
             },
             dataType: 'json',
@@ -149,18 +177,21 @@
                     $inputNewAnswer.val('');
                     $divAnswersList.append(
                         `
-<div class="row">
-    <div class="column column-50">
+<div class="row" data-answer-id="${data.answer.id}">
+    <div class="column">
+        <label for="answer-${data.answer.id}">Réponse</label>
         <textarea rows="2" id="answer-${data.answer.id}" name="answer-${data.answer.id}" class="m-0 answer">${data.answer.display_text}</textarea>
     </div>
-    <div
-        class="column column-20 text-center column-center">
-        <input type="radio" name="valid" class="m-0 v-align-middle"
-               value="${data.answer.id}">
+    <div class="column">
+        <label for="feedback-${data.answer.id}">Feedback</label>
+        <textarea rows="2" id="feedback-${data.answer.id}" name="feedback-${data.answer.id}" class="m-0 feedback">${data.answer.feedback}</textarea>
     </div>
-    <div
-        class="column column-10 text-center column-center">
-        <a href="#" class="delete" data-answerid="${data.answer.id}">Supprimer</a>
+    <div class="column column-20 text-center column-center">
+        <label for="valid-a${data.answer.id}">Bonne réponse</label>
+        <input type="checkbox" name="valid-a${data.answer.id}" class="m-0 v-align-middle" id="valid-a${data.answer.id}" value="${data.answer.id}">
+    </div>
+    <div class="column column-10 text-center column-center">
+        <a href="#" class="deleteAnswer">Supprimer</a>
     </div>
 </div>
 <hr>
@@ -172,20 +203,21 @@
         });
     }
 
-    function updateAnswer(answer_id, answer) {
+    function updateAnswer(answer_id, answer, feedback) {
         $.ajax({
             url: '<?= $this->Url->build('/admin/answers/edit') ?>',
             type: 'POST',
             data: {
                 answer: answer,
-                answer_id: answer_id
+                answer_id: answer_id,
+                feedback: feedback,
             },
             dataType: 'json',
             success: function (data) {
                 if (data.error === 0) {
-                    $('#answer-' + answer_id).removeClass(
-                        'border-orange').addClass(
-                        'border-green');
+                    $('#answer-' + answer_id + ',#feedback-' + answer_id)
+                    .removeClass('border-orange')
+                    .addClass('border-green');
                 } else {
                     alert(data.message);
                 }

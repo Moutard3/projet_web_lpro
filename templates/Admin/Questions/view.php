@@ -24,11 +24,13 @@
             <table>
                 <tr>
                     <th>Réponse</th>
+                    <th>Feedback</th>
                     <th>Valide</th>
                 </tr>
                 <?php foreach ($question->answers as $answers) : ?>
                     <tr>
                         <td><?= h($answers->display_text) ?></td>
+                        <td><?= h($answers->feedback) ?></td>
                         <td><?= $answers->valid ? 'Correcte' : '' ?></td>
                     </tr>
                 <?php endforeach; ?>

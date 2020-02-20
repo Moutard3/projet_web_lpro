@@ -40,7 +40,7 @@ class AnswersController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response|null
      */
     public function add()
     {
@@ -49,6 +49,7 @@ class AnswersController extends AppController
             $data = [];
             $data['valid'] = 0;
             $data['display_text'] = $this->request->getData('answer');
+            $data['feedback'] = $this->request->getData('feedback');
             $data['question_id'] = $this->request->getData('question_id');
             $answer = $this->Answers->patchEntity($answer, $data);
             if ($this->Answers->save($answer)) {
@@ -75,6 +76,7 @@ class AnswersController extends AppController
             $id = $this->request->getData('answer_id');
             $data = [];
             $data['display_text'] = $this->request->getData('answer');
+            $data['feedback'] = $this->request->getData('feedback');
 
             $answer = $this->Answers->get($id, [
                 'contain' => [],

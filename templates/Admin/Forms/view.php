@@ -36,9 +36,10 @@
                     <tr>
                         <th>Question</th>
                         <th>Réponses</th>
+                        <th>Feedback</th>
                     </tr>
                     <?php foreach ($form->questions as $formQuestions) : ?>
-                    <tr>
+                    <tr class="v-align-top">
                         <td><?= h($formQuestions->display_text) ?></td>
                         <td>
                             <ol>
@@ -57,6 +58,25 @@
 
                                 echo '</li>';
                             endforeach; ?>
+                            </ol>
+                        </td>
+                        <td>
+                            <ol>
+                                <?php foreach ($formQuestions->answers as $answer) :
+                                    echo '<li>';
+
+                                    if ($answer->valid) {
+                                        echo '<strong>';
+                                    }
+
+                                    echo $answer->feedback;
+
+                                    if ($answer->valid) {
+                                        echo '</strong>';
+                                    }
+
+                                    echo '</li>';
+                                endforeach; ?>
                             </ol>
                         </td>
                     </tr>

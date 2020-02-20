@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property int $question_id
  * @property bool $valid
  * @property string $display_text
+ * @property string $feedback
  *
  * @property \App\Model\Entity\Question $question
  * @property \App\Model\Entity\StudentAnswer[] $student_answers
@@ -33,5 +34,6 @@ class Answer extends Entity
         'display_text' => true,
         'question' => true,
         'student_answers' => true,
+        'feedback' => true,
     ];
 }

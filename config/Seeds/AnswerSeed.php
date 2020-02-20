@@ -37,6 +37,7 @@ class AnswerSeed extends AbstractSeed
                 'question_id' => $faker->randomElement($questions)['id'],
                 'valid' => $faker->boolean,
                 'display_text' => $faker->sentence(4),
+                'feedback' => $faker->sentence(4),
             ];
         }
 

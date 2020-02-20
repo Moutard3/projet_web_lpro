@@ -70,6 +70,11 @@ class AnswersTable extends Table
             ->requirePresence('display_text', 'create')
             ->notEmptyString('display_text');
 
+        $validator
+            ->scalar('feedback')
+            ->requirePresence('feedback', 'create')
+            ->notEmptyString('feedback');
+
         return $validator;
     }
 
